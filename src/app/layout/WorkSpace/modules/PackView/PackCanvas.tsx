@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-// import { useTheme } from '@mui/material/styles'
 import {
   FunctionComponent,
   useCallback,
@@ -10,6 +9,7 @@ import {
 } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
+import { darkBgPixel, lightBgPixel } from 'src/app/theme/bgPixel'
 import {
   setIsDarkBg,
   setTransform,
@@ -23,32 +23,7 @@ import {
   useUiTransform,
 } from 'src/store/legend'
 
-const lightBgPixel = {
-  backgroundColor: '#ffffff',
-  backgroundImage: `
-    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
-    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
-    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%)
-  `,
-  backgroundSize: '20px 20px',
-  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
-}
-
-const darkBgPixel = {
-  backgroundColor: '#2a2a2a',
-  backgroundImage: `
-    linear-gradient(45deg, #505050 25%, transparent 25%),
-    linear-gradient(-45deg, #505050 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #505050 75%),
-    linear-gradient(-45deg, transparent 75%, #505050 75%)
-  `,
-  backgroundSize: '20px 20px',
-  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
-}
-
 const PackCanvas: FunctionComponent = () => {
-  // const { bgPixel } = useTheme()
   const isDarkBg = useIsDarkBg()
   const isPacking = useIsPacking()
   const { scale, offsetX, offsetY } = useUiTransform()
@@ -182,6 +157,7 @@ const PackCanvas: FunctionComponent = () => {
       onMouseDown={handleMouseDown}
     >
       <Box
+        title="Toggle background"
         sx={{
           position: 'absolute',
           top: 8,

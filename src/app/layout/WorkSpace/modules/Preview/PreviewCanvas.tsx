@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-// import { useTheme } from '@mui/material/styles'
 import {
   FunctionComponent,
   useCallback,
@@ -10,6 +9,7 @@ import {
 } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
+import { darkBgPixel, lightBgPixel } from 'src/app/theme/bgPixel'
 import {
   clearSelection,
   getGlyphForLetter,
@@ -41,31 +41,6 @@ import { hexToNormalizedRgb } from 'src/utils/webgl/SdfShaderRenderer'
 import LetterList from './LetterList'
 import { useSdfPreviewRenderer } from './useSdfPreviewRenderer'
 
-// Chessboard pattern definitions
-const lightBgPixel = {
-  backgroundColor: '#ffffff',
-  backgroundImage: `
-    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
-    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
-    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%)
-  `,
-  backgroundSize: '20px 20px',
-  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
-}
-
-const darkBgPixel = {
-  backgroundColor: '#2a2a2a',
-  backgroundImage: `
-    linear-gradient(45deg, #505050 25%, transparent 25%),
-    linear-gradient(-45deg, #505050 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #505050 75%),
-    linear-gradient(-45deg, transparent 75%, #505050 75%)
-  `,
-  backgroundSize: '20px 20px',
-  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
-}
-
 interface PreviewData {
   lines: number
   list: {
@@ -90,8 +65,6 @@ interface PreviewData {
 // Currently deferred due to tight coupling between canvas ref, multiple
 // store subscriptions, and interdependent useEffect chains.
 const PreviewCanvas: FunctionComponent = () => {
-  // const { bgPixel } = useTheme()
-
   // Use Legend State hooks
   const renderMode = useRenderMode()
   const distanceRange = useDistanceRange()
@@ -448,40 +421,44 @@ const PreviewCanvas: FunctionComponent = () => {
     })
 
     if (isShowBaselines) {
-
-    for (let index = 0; index < data.lines; index += 1) {
-      ;[middle, hanging, top, alphabetic, ideographic, bottom].forEach(
-        (baseLine) => {
-          const baseY = Math.round(
-            (baseLine - minBaseLine) * sizeRatio + index * lh,
-          )
-          ctx.beginPath()
-          ctx.moveTo(-data.xOffset, baseY + 0.5 - data.yOffset + drawYOffset)
-          ctx.lineTo(data.width, baseY + 0.5 - data.yOffset + drawYOffset)
-          if (baseLine === minBaseLine || baseLine === maxBaseLine) {
-            ctx.strokeStyle = 'rgba(0,0,0,1)'
-            ctx.setLineDash([])
-          } else {
-            ctx.strokeStyle = 'rgba(0,0,0,0.5)'
-            ctx.setLineDash([10, 3, 2, 3])
-          }
-          ctx.stroke()
-        },
-      )
-      ctx.beginPath()
-      ctx.moveTo(-data.xOffset + 0.5, index * lh - data.yOffset + drawYOffset)
-      ctx.lineTo(
-        -data.xOffset + 0.5,
-        index * lh -
-          data.yOffset +
-          (maxBaseLine - minBaseLine) * sizeRatio +
-          drawYOffset,
-      )
-      ctx.strokeStyle = 'rgba(0,0,0,1)'
-      ctx.setLineDash([])
-      ctx.stroke()
-    }
-
+      for (let index = 0; index < data.lines; index += 1) {
+        ;[middle, hanging, top, alphabetic, ideographic, bottom].forEach(
+          (baseLine) => {
+            const baseY = Math.round(
+              (baseLine - minBaseLine) * sizeRatio + index * lh,
+            )
+            ctx.beginPath()
+            ctx.moveTo(
+              -data.xOffset,
+              baseY + 0.5 - data.yOffset + drawYOffset,
+            )
+            ctx.lineTo(data.width, baseY + 0.5 - data.yOffset + drawYOffset)
+            if (baseLine === minBaseLine || baseLine === maxBaseLine) {
+              ctx.strokeStyle = 'rgba(0,0,0,1)'
+              ctx.setLineDash([])
+            } else {
+              ctx.strokeStyle = 'rgba(0,0,0,0.5)'
+              ctx.setLineDash([10, 3, 2, 3])
+            }
+            ctx.stroke()
+          },
+        )
+        ctx.beginPath()
+        ctx.moveTo(
+          -data.xOffset + 0.5,
+          index * lh - data.yOffset + drawYOffset,
+        )
+        ctx.lineTo(
+          -data.xOffset + 0.5,
+          index * lh -
+            data.yOffset +
+            (maxBaseLine - minBaseLine) * sizeRatio +
+            drawYOffset,
+        )
+        ctx.strokeStyle = 'rgba(0,0,0,1)'
+        ctx.setLineDash([])
+        ctx.stroke()
+      }
     }
   }, [
     alphabetic,
@@ -548,6 +525,7 @@ const PreviewCanvas: FunctionComponent = () => {
         }}
       >
         <Box
+          title="Toggle background"
           sx={{
             width: 24,
             height: 24,
@@ -563,6 +541,7 @@ const PreviewCanvas: FunctionComponent = () => {
           }}
         />
         <Box
+          title="Toggle baselines"
           sx={{
             width: 24,
             height: 24,
